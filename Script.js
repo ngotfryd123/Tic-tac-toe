@@ -9,20 +9,26 @@ function Gameboard() {
         board[i].push(Cell());
       }
     }
+
+    const dropToken = (row, column, player) => {
+        board[row][column].addToken(player);
+      };
+    
   
     const getBoard = () => board;
   
-    return { getBoard};
+    return { getBoard, dropToken};
   }
   
   function Cell() {
     let value = "";
   
     const addToken = (player) => {
-      value = player;
+        value = player;
+        getValue(value);
     };
   
-    const getValue = () => value;
+    const getValue = () =>value;
   
     return {
       addToken,
@@ -35,7 +41,7 @@ function Gameboard() {
     playerTwoName = "Player Two"
   ) {
     const board = Gameboard();
-  
+    
     const players = [
       {
         name: playerOneName,
@@ -54,9 +60,9 @@ function Gameboard() {
     };
     const getActivePlayer = () => activePlayer;
   
-    const playRound = (column) => {
+    const playRound = (row,col) => {
       
-  
+         board.dropToken(row, col, activePlayer.token);
       /*  This is where we would check for a winner and handle that logic,
           such as a win message. */
   
@@ -74,6 +80,7 @@ function Gameboard() {
     const game = GameController();
     const playerTurnDiv = document.querySelector('.turn');
     const boardDiv = document.querySelector('.board');
+    
   
     const updateScreen = () => {
       // clear the board
@@ -86,31 +93,25 @@ function Gameboard() {
       // Display player's turn
       playerTurnDiv.textContent = `${activePlayer.name}'s turn...`
   
-      // Render board squares
-      board.forEach(row => {
-        row.forEach((cell, index) => {
-          // Anything clickable should be a button!!
-          const cellButton = document.createElement("button");
-          cellButton.classList.add("cell");
-          // Create a data attribute to identify the column
-          // This makes it easier to pass into our `playRound` function 
-          cellButton.dataset.column = index
-          cellButton.textContent = cell.getValue();
-          boardDiv.appendChild(cellButton);
-        })
-      })
-    }
+      // Function to handle square clicks
+    function handleSquareClick(row, col) {
+        game.playRound(row, col);
+        updateScreen();
+      }
   
-    // Add event listener for the board
-    function clickHandlerBoard(e) {
-      const selectedColumn = e.target.dataset.column;
-      // Make sure I've clicked a column and not the gaps in between
-      if (!selectedColumn) return;
-      
-      game.playRound(selectedColumn);
-      updateScreen();
+      // Create the grid of squares and add click event listeners
+      for (let row = 0; row < 3; row++) {
+        for (let col = 0; col < 3; col++) {
+          const square = document.createElement("button");
+          square.className = "square";
+          square.textContent = board[row][col].getValue();
+          square.addEventListener("click", () => {
+            handleSquareClick(row, col);
+          });
+          boardDiv.appendChild(square);
+        }
+      }
     }
-    boardDiv.addEventListener("click", clickHandlerBoard);
   
     // Initial render
     updateScreen();
