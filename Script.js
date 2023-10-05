@@ -25,7 +25,6 @@ function Gameboard() {
   
     const addToken = (player) => {
         value = player;
-        getValue(value);
     };
   
     const getValue = () =>value;
@@ -106,7 +105,9 @@ function Gameboard() {
           square.className = "square";
           square.textContent = board[row][col].getValue();
           square.addEventListener("click", () => {
-            handleSquareClick(row, col);
+            if (square.textContent !== ""){}
+            else{
+            handleSquareClick(row, col);}
           });
           boardDiv.appendChild(square);
         }
