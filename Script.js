@@ -64,6 +64,8 @@ function Gameboard() {
     [1, 5, 9],
     [3, 5, 7]
     ];
+
+
     function checkWin(){
 
       // Function to generate all combinations of 3 choices from an array.
@@ -98,11 +100,12 @@ function Gameboard() {
     }
 
     // Check if any combination was found in the sets.
-    if (combinationFound)return activePlayer.name;
-    else {
-    
-    // You can add your code for when no combination is found here.
-    }
+    if (combinationFound)return "win";
+    else if(players[0].choices.length === 5 && players[1].choices.length === 4 ){
+     return "tie";}
+    else if(players[1].choices.length === 5 && players[0].choices.length === 4 ){
+      return "tie";}
+    else {}
 
   }
 
@@ -184,8 +187,10 @@ function Gameboard() {
       const activePlayer = game.getActivePlayer();
   
       // Display player's turn
-      if(game.checkWin() !== undefined){
+      if(game.checkWin() === "win"){
         playerTurnDiv.textContent = `${activePlayer.name} Won!`}
+      else if (game.checkWin() === "tie"){
+        playerTurnDiv.textContent = `It's a Tie!`}
       else playerTurnDiv.textContent = `${activePlayer.name}'s turn...`
   
       // Function to handle square clicks
