@@ -54,6 +54,11 @@ function Gameboard() {
       }
     ];
 
+    function updatePlayerNames(name1, name2) {
+      players[0].name = name1;
+      players[1].name = name2;
+    };
+
     const setsToCompare = [
     [1, 2, 3],
     [4, 5, 6],
@@ -156,7 +161,7 @@ function Gameboard() {
          board.dropToken(row, col, activePlayer.token);
          playerSelection(row,col);
          checkWin();
-         console.log(checkWin());
+
          if(checkWin() !== undefined){
           return;
          }
@@ -168,7 +173,8 @@ function Gameboard() {
       getActivePlayer,
       getBoard: board.getBoard,
       playerSelection,
-      checkWin
+      checkWin,
+      updatePlayerNames
     };
   }
   
@@ -176,7 +182,16 @@ function Gameboard() {
     const game = GameController();
     const playerTurnDiv = document.querySelector('.turn');
     const boardDiv = document.querySelector('.board');
-    
+    document.getElementById("nameForm").addEventListener("submit", function(event) {
+      event.preventDefault(); // Prevent the default form submission behavior
+
+      // Get the values from the input fields
+      var name1 = document.getElementById("Player1").value;
+      var name2 = document.getElementById("Player2").value;
+      game.updatePlayerNames(name1, name2);
+      updateScreen();
+      document.getElementById("nameForm").reset();
+    });
   
     const updateScreen = () => {
       // clear the board
