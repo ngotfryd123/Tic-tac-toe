@@ -44,13 +44,102 @@ function Gameboard() {
     const players = [
       {
         name: playerOneName,
-        token: "X"
+        token: "X",
+        choices:[]
       },
       {
         name: playerTwoName,
-        token: "O"
+        token: "O",
+        choices:[]
       }
     ];
+
+    const setsToCompare = [
+    [1, 2, 3],
+    [4, 5, 6],
+    [7, 8, 9],
+    [1, 4, 7],
+    [2, 5, 8],
+    [3, 6, 9],
+    [1, 5, 9],
+    [3, 5, 7]
+    ];
+    function checkWin(){
+
+      // Function to generate all combinations of 3 choices from an array.
+    function generateCombinations(choices) {
+    const combinations = [];
+    const len = choices.length;
+
+    for (let i = 0; i < len - 2; i++) {
+      for (let j = i + 1; j < len - 1; j++) {
+        for (let k = j + 1; k < len; k++) {
+          combinations.push([choices[i], choices[j], choices[k]]);
+        }
+      }
+    }
+
+    return combinations;
+    }
+
+
+    // Generate all combinations of 3 choices from the player's choices.
+    const choiceCombinations = generateCombinations(activePlayer.choices);
+
+    // Initialize a flag to check if any combination is found in the sets.
+    let combinationFound = false;
+
+    // Loop through each combination and check if it exists in setsToCompare.
+    for (const combination of choiceCombinations) {
+    if (setsToCompare.some((set) => set.every((value) => combination.includes(value)))) {
+      combinationFound = true;
+      break;
+    }
+    }
+
+    // Check if any combination was found in the sets.
+    if (combinationFound)return activePlayer.name;
+    else {
+    
+    // You can add your code for when no combination is found here.
+    }
+
+  }
+
+    function playerSelection(row,col){
+      let selection;
+      switch(true){
+      case row===0 && col===0:
+        selection=1;
+        break;
+      case row===0 && col===1:
+        selection=2;
+        break;
+        case row===0 && col===2:
+        selection=3;
+        break;
+      case row===1 && col===0:
+        selection=4;
+        break;
+        case row===1 && col===1:
+        selection=5;
+        break;
+      case row===1 && col===2:
+        selection=6;
+        break;
+        case row===2 && col===0:
+        selection=7;
+        break;
+      case row===2 && col===1:
+        selection=8;
+        break;
+      case row===2 && col===2:
+        selection=9;
+        break;}
+
+      return activePlayer.choices.push(selection);
+    }
+
   
     let activePlayer = players[0];
   
@@ -62,16 +151,21 @@ function Gameboard() {
     const playRound = (row,col) => {
       
          board.dropToken(row, col, activePlayer.token);
-      /*  This is where we would check for a winner and handle that logic,
-          such as a win message. */
-  
-      switchPlayerTurn();
+         playerSelection(row,col);
+         checkWin();
+         console.log(checkWin());
+         if(checkWin() !== undefined){
+          return;
+         }
+         else switchPlayerTurn();
     };
   
     return {
       playRound,
       getActivePlayer,
-      getBoard: board.getBoard
+      getBoard: board.getBoard,
+      playerSelection,
+      checkWin
     };
   }
   
@@ -90,7 +184,9 @@ function Gameboard() {
       const activePlayer = game.getActivePlayer();
   
       // Display player's turn
-      playerTurnDiv.textContent = `${activePlayer.name}'s turn...`
+      if(game.checkWin() !== undefined){
+        playerTurnDiv.textContent = `${activePlayer.name} Won!`}
+      else playerTurnDiv.textContent = `${activePlayer.name}'s turn...`
   
       // Function to handle square clicks
     function handleSquareClick(row, col) {
