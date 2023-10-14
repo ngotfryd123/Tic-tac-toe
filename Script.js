@@ -14,10 +14,17 @@ function Gameboard() {
         board[row][column].addToken(player);
       };
     
-  
+    const reset = () => {
+      for (let i = 0; i < rows; i++) {
+        for (let j = 0; j < columns; j++) {
+          board[i][j].addToken(""); // Set the token value to an empty string
+        }
+      }
+    };
+
     const getBoard = () => board;
   
-    return { getBoard, dropToken};
+    return { getBoard, dropToken, reset};
   }
   
   function Cell() {
@@ -58,6 +65,13 @@ function Gameboard() {
       players[0].name = name1;
       players[1].name = name2;
     };
+
+    function resetGame(){
+      players[0].choices=[];
+      players[1].choices=[];
+      board.reset();
+      activePlayer = players[0];
+    }
 
     const setsToCompare = [
     [1, 2, 3],
@@ -174,7 +188,8 @@ function Gameboard() {
       getBoard: board.getBoard,
       playerSelection,
       checkWin,
-      updatePlayerNames
+      updatePlayerNames,
+      resetGame
     };
   }
   
@@ -184,13 +199,18 @@ function Gameboard() {
     const boardDiv = document.querySelector('.board');
     document.getElementById("nameForm").addEventListener("submit", function(event) {
       event.preventDefault(); // Prevent the default form submission behavior
-
       // Get the values from the input fields
       var name1 = document.getElementById("Player1").value;
       var name2 = document.getElementById("Player2").value;
       game.updatePlayerNames(name1, name2);
       updateScreen();
       document.getElementById("nameForm").reset();
+    });
+    const resetButton = document.getElementById("resetButton");
+    resetButton.addEventListener("click", () => {
+      console.log("hello");
+      game.resetGame(); // Call the reset function in GameController
+      updateScreen(); // Update the screen after resetting
     });
   
     const updateScreen = () => {
