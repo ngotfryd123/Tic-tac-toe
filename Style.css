@@ -16,6 +16,21 @@ body {
     gap: 2px;
     padding: 2px;
   }
+
+  @media (max-width: 768px) {
+    .board {
+      width: 350px; /* Define the width for mobile view */
+      height: 350px; /* Define the height for mobile view */
+    }
+  }
+  
+  /* Media query for desktop */
+  @media (min-width: 769px) {
+    .board {
+      width: 500px; /* Define the width for desktop view */
+      height: 500px; /* Define the height for desktop view */
+    }
+  }
   
   .square{
     display: flex;
@@ -24,4 +39,19 @@ body {
     text-align: center;
     font-size: 2rem;
     cursor: pointer;
+  }
+
+  @media (max-width: 768px) {
+    .square {
+      width: 115px; /* Define the width for mobile view */
+      height: 115px; /* Define the height for mobile view */
+    }
+  }
+  
+  /* Media query for desktop */
+  @media (min-width: 769px) {
+    .square {
+      width: 165px; /* Define the width for desktop view */
+      height: 165px; /* Define the height for desktop view */
+    }
   }
